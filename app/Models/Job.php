@@ -8,10 +8,20 @@ use Illuminate\Support\Arr;
 
 class Job extends Model
 {
-    protected $table = 'job_listings';
+    use HasFactory;
 
+    protected $table = 'job_listings';
     protected $fillable = ['title', 'salary'];
-    // use HasFactory;
+
+    public function employer()
+    {
+        return $this->belongsTo(Employer::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, foreignPivotKey: "job_listing_id");
+    }
 }
 
 // dummy data model
