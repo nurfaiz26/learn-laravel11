@@ -29,8 +29,9 @@ class AppServiceProvider extends ServiceProvider
         // css framework config
         // Paginator::useTailwind();
 
-        Gate::define('edit-job', function (User $user, Job $job) {
-            return ($job->employer->user->is($user));
-        });
+        // auth dengan gate method
+        // Gate::define('edit-job', function (User $user, Job $job) {
+        //     return ($job->employer->user->is($user));
+        // }); // diganti dengan policy, lihat JobPolicy
     }
 }
