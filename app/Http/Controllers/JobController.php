@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\JobPosted;
 use App\Models\Job;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 
 class JobController extends Controller
 {
@@ -34,17 +39,40 @@ class JobController extends Controller
             'salary' => ['required']
         ]);
 
-        Job::create([
+        $job = Job::create([
             'title' => request('title'),
             'salary' => request('salary'),
             'employer_id' => 1
         ]);
+
+        Mail::to($job->employer->user)->send(
+            new JobPosted($job)
+        );
+
 
         return redirect('/jobs');
     }
 
     public function edit(Job $job)
     {
+        // authorization method 2
+        // Gate::define('edit-job', function (User $user, Job $job) {
+        //     return ($job->employer->user->is($user));
+        // }); // pindah ke App/Providers/AppServiceProvider.php
+
+        // authorization method 1
+        // if (Auth::guest()) {
+        //     return redirect('/login');
+        // }
+
+        // authorization method 1
+        // if($job->employer->user->isNot(Auth::user())){
+        //     abort(403);
+        // }
+
+        // lanjutan method 2
+        // Gate::authorize('edit-job', $job); // auth on controller level
+
         return view('jobs.edit', ['job' => $job]);
     }
 
@@ -56,6 +84,8 @@ class JobController extends Controller
         ]);
 
         // authorize
+        Gate::authorize('edit-job', $job);
+
         // update the job and persist
         $job->update([
             'title' => request('title'),
@@ -69,6 +99,7 @@ class JobController extends Controller
     public function destroy(Job $job)
     {
         // authorize
+        Gate::authorize('edit-job', $job);
 
         // delete the job
         $job->delete();
