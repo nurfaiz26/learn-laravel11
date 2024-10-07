@@ -30,7 +30,6 @@ class JobPosted extends Mailable
         return new Envelope(
             subject: 'Job Posted',
             from: 'admin@faiz.com', // envelope method, bisa juga dengan mengatur dari .env dan hapus/komen line ini
-            // replyTo: ''
         );
     }
 
