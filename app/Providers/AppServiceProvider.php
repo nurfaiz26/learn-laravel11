@@ -25,13 +25,5 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::preventLazyLoading();
-
-        // css framework config
-        // Paginator::useTailwind();
-
-        // auth dengan gate method
-        // Gate::define('edit-job', function (User $user, Job $job) {
-        //     return ($job->employer->user->is($user));
-        // }); // diganti dengan policy, lihat JobPolicy
     }
 }
